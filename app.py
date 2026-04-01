@@ -4,6 +4,8 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image
 import cv2
+import os
+import gdown
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(page_title="Multi-Disease System", layout="wide")
@@ -29,7 +31,17 @@ st.markdown("""
 diabetes_model = pickle.load(open("diabetes.pkl", "rb"))
 heart_model = pickle.load(open("heart.pkl", "rb"))
 stroke_model = pickle.load(open("stroke.pkl", "rb"))
-cnn_model = load_model("cnn_model.h5")
+
+# Google Drive Download Workaround for large .h5 file
+model_path = 'cnn_model.h5'
+file_id = '11Bh9NOA0OdzSRXEVP-vrtqtDk9WXn9hw/view?usp=drive_link'
+
+if not os.path.exists(model_path):
+    with st.spinner("Downloading CNN model from Drive... (This only happens once!)"):
+        url = f'https://drive.google.com/uc?id={file_id}'
+        gdown.download(url, model_path, quiet=False)
+
+cnn_model = load_model(model_path)
 
 # ---------------- HEADER ----------------
 st.markdown('<p class="big-title">🏥 Multi-Disease Prediction Dashboard</p>', unsafe_allow_html=True)
