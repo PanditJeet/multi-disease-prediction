@@ -34,7 +34,7 @@ stroke_model = pickle.load(open("stroke.pkl", "rb"))
 
 # Google Drive Download Workaround for large .h5 file
 model_path = 'cnn_model.h5'
-file_id = '11Bh9NOA0OdzSRXEVP-vrtqtDk9WXn9hw/view?usp=drive_link'
+file_id = '11Bh9NOA0OdzSRXEVP-vrtqtDk9WXn9hw'
 
 if not os.path.exists(model_path):
     with st.spinner("Downloading CNN model from Drive... (This only happens once!)"):
