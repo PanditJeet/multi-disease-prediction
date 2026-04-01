@@ -2,6 +2,6 @@ streamlit
 numpy
 pandas
 scikit-learn
-tensorflow
-opencv-python
+tensorflow==2.12.0
+opencv-python-headless
 pillow
