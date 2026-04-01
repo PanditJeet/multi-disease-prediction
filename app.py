@@ -1,21 +1,16 @@
 import streamlit as st
 import pickle
-import numpy as np
-from tensorflow.keras.models import load_model
-from PIL import Image
-import cv2
 
 # ---------------- LOAD MODELS ----------------
 diabetes_model = pickle.load(open("diabetes.pkl", "rb"))
 heart_model = pickle.load(open("heart.pkl", "rb"))
 stroke_model = pickle.load(open("stroke.pkl", "rb"))
-cnn_model = load_model("cnn_model.h5")
 
 # ---------------- TITLE ----------------
 st.title("Multi-Disease Prediction System")
 
 menu = st.sidebar.selectbox("Select Module",
-                           ["Diabetes", "Heart Disease", "Stroke", "Pneumonia (X-ray)"])
+                           ["Diabetes", "Heart Disease", "Stroke"])
 
 # ---------------- DIABETES ----------------
 if menu == "Diabetes":
@@ -45,7 +40,7 @@ elif menu == "Heart Disease":
     st.header("Heart Disease Prediction")
 
     age = st.number_input("Age")
-    
+
     sex = st.selectbox("Sex", ["Female", "Male"])
     sex = 1 if sex == "Male" else 0
 
@@ -114,26 +109,3 @@ elif menu == "Stroke":
             st.error(f"Stroke Risk ({prob[1]*100:.2f}%)")
         else:
             st.success(f"No Stroke Risk ({prob[0]*100:.2f}%)")
-
-# ---------------- CNN (X-RAY) ----------------
-elif menu == "Pneumonia (X-ray)":
-    st.header("Pneumonia Detection from X-ray")
-
-    uploaded_file = st.file_uploader("Upload Chest X-ray Image",
-                                     type=["jpg", "png", "jpeg"])
-
-    if uploaded_file is not None:
-        image = Image.open(uploaded_file)
-        st.image(image, caption="Uploaded Image", use_column_width=True)
-
-        img = np.array(image)
-        img = cv2.resize(img, (150, 150))
-        img = img / 255.0
-        img = img.reshape(1, 150, 150, 3)
-
-        prediction = cnn_model.predict(img)[0][0]
-
-        if prediction > 0.5:
-            st.error(f"Pneumonia Detected ({prediction*100:.2f}%)")
-        else:
-            st.success(f"Normal ({(1-prediction)*100:.2f}%)")
